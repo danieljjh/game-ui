@@ -1,10 +1,10 @@
-import Vue from 'vue'
-import App from './App.vue'
-import './registerServiceWorker'
-import router from './router'
-import store from './store'
-import OwUI from 'overwatch-ui'
-import 'overwatch-ui/dist/overwatch-ui.css'
+import Vue from "vue"
+import App from "./App.vue"
+import "./registerServiceWorker"
+import router from "./router"
+import store from "./store"
+import OwUI from "overwatch-ui"
+import "overwatch-ui/dist/overwatch-ui.css"
 Vue.use(OwUI)
 Vue.use(OwUI.plugins.$owAlert)
 
@@ -17,4 +17,4 @@ new Vue({
   router,
   store,
   render: h => h(App)
-}).$mount('#app')
+}).$mount("#app")
