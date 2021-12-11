@@ -5,10 +5,14 @@ import router from "./router"
 import store from "./store"
 import OwUI from "overwatch-ui"
 import "overwatch-ui/dist/overwatch-ui.css"
+import axios from "axios";
+import VueAxios from "vue-axios";
+
 Vue.use(OwUI)
 Vue.use(OwUI.plugins.$owAlert)
-
 Vue.config.productionTip = false
+Vue.prototype.$http = axios;
+Vue.use(VueAxios, axios);
 
 new Vue({
   components: {
