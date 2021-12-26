@@ -42,8 +42,8 @@
                     <div v-if="showBeakerA==true">点击放入这里</div>
                     <div>
                         <div class="playerNotice" v-if="currPlayer===0">
-                            <div>
-                                请选择卡牌
+                            <div class="content heroName">
+                                {{players[0].name}}: 请选择卡牌
                             </div>
                         </div>
                     </div>
@@ -70,7 +70,11 @@
                 </ow-col>
                 <!-- 游戏通告 -->
                 <ow-col :pc="{span: 8}" class="centerBox">
-                    <h2>当前回合 {{currentRound}}</h2>
+                    <div style="background-color: #000">
+                    <img src="@/assets/img/logo.png" style="width: 80%"/>
+
+                    </div>
+                    <h2>当前回合 {{currentRealRound}}</h2>
                     <div>当前玩家 {{players[currPlayer].name}}</div>
                     <!-- <div style="color: red;font-size: 24px">
                         已选择 {{players[currPlayer].cards[currCardId]}}
@@ -81,7 +85,7 @@
                             {{currAction}}
                         </template>
                         <div style="margin-bottom: 12px" v-for="(item, idx) in currentRoundRes" :key="idx">
-                            <p>{{item}}</p>
+                            <h3>{{item}}</h3>
                         </div>
                         <template slot="footer">
                             <ow-button @click="isOpen = false">Close</ow-button>
@@ -101,9 +105,8 @@
                             </div>
                         </ow-collapse>
                     </ow-collapse-group>
-
                     <!-- card selected -->
-                    <div v-if="players[currPlayer].cards[currCardId] !== undefined">
+                    <div class="cardInfo" v-if="players[currPlayer].cards[currCardId] !== undefined">
                         <h2 style="color: red">{{players[currPlayer].cards[currCardId].name}}</h2>
                         <h3 style="color: blue">{{players[currPlayer].cards[currCardId].type}}</h3>
                         <p>{{players[currPlayer].cards[currCardId].description}}</p>
@@ -151,8 +154,8 @@
 
                     </div> -->
                     <div v-if="currPlayer===1" style="text-align:center">
-                        <div class="playerNotice">
-                            请选择卡牌
+                        <div class="content heroName">
+                            {{players[1].name}}: 请选择卡牌
                         </div>
                     </div>
                     <ow-row class="row cards " v-if="currPlayer===91">
@@ -192,7 +195,16 @@
                                 $: {{item.cost}}
                             </div>
                         </div>
-                        <p v-if="!item.hovered && idx != currCardId">Secret </p>
+                        <div v-if="!item.hovered && (idx != currCardId) ">
+                            <div>
+                                <div class="">
+                                    {{item.name}}
+                                </div>
+                                <div class="cost">
+                                    $: {{item.cost}}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <template slot="content">
                         <div>点击选择这张牌，放进烧杯？</div>
@@ -211,7 +223,14 @@
                             {{item.cost}}
                         </div>
                     </div>
-                    <p v-if="!item.hovered">Secret !!! </p>
+                    <div v-if="!item.hovered">
+                        <div class="name2">
+                            {{item.name}}
+                        </div>
+                        <div class="cost">
+                            {{item.cost}}
+                        </div>
+                    </div>
                     <template slot="content">
                         <div>只能选择前 4 张牌</div>
                     </template>
@@ -230,6 +249,14 @@
         <ow-row class="row cards " v-if="currPlayer===1">
             <div v-bind:class="(item.hovered==true || (currPlayer==1 && currCardId==idx))?'box foo-hover  ':'box' " v-for="(item, idx) in players[1].cards.slice(0, 4)" :key="idx" @mouseover="item.hovered = true" @mouseleave="item.hovered = false" @click="selectCard(item, 0, idx)">
                 <div v-if="item.hovered==true || (currPlayer==1 && currCardId==idx)">
+                    <div class="element-name">
+                        {{item.name}}
+                    </div>
+                    <div class="cost">
+                        {{item.cost}}
+                    </div>
+                </div>
+                <div v-if="!item.hovered && idx != currCardId">
                     <div class="name">
                         {{item.name}}
                     </div>
@@ -237,9 +264,8 @@
                         {{item.cost}}
                     </div>
                 </div>
-                <p v-if="!item.hovered"></p>
             </div>
-            <div v-bind:class="(item.hovered==true)?'box foo-hover  ':'box2' " v-for="(item) in players[1].cards.slice(4, 5)" :key="item.cid" @mouseover="item.hovered = true" @mouseleave="item.hovered = false">
+            <div v-bind:class="(item.hovered==true)?'box foo-hover ':'box2' " v-for="(item, idx) in players[1].cards.slice(4, 5)" :key="item.cid" @mouseover="item.hovered = true" @mouseleave="item.hovered = false">
                 <ow-popover class="popover" position="top">
 
                     <div v-if="item.hovered==true ">
@@ -250,7 +276,14 @@
                             {{item.cost}}
                         </div>
                     </div>
-                    <p v-if="!item.hovered && idx != currCardId">Secret !!! </p>
+                    <div v-if="!item.hovered && idx != currCardId">
+                        <div class="name2">
+                            {{item.name}}
+                        </div>
+                        <div class="cost">
+                            {{item.cost}}
+                        </div>
+                    </div>
                     <template slot="content">
                         <div>只能选择前 4 张牌</div>
                     </template>
@@ -282,6 +315,7 @@ export default {
             currCardId: null,
             selected: "0",
             currentRound: 1,
+            currentRealRound: 1,
             currPlayer: 0,
             cardSelected: 0,
             scoreA: 0,
@@ -341,7 +375,7 @@ export default {
                         players[0].cards.push({
                             name: res.data.cards[0][i].name,
                             description: res.data.cards[0][i].description,
-                            type: res.data.cards[1][i].type,
+                            type: res.data.cards[0][i].type,
                             cost: res.data.cards[0][i].cost,
                             hovered: false
                         })
@@ -392,6 +426,7 @@ export default {
              */
             const that = this
             console.log("select card", playerId, currCardId, typeof (currCardId))
+            // console.log("cardtype:", that.players[currCardId])
             that.cardSelected = 1
             that.currCardId = currCardId
         },
@@ -499,12 +534,15 @@ export default {
         toEndRound(playerId) {
             // 结束回合
             var that = this
+            var currentRealRound = Math.ceil(that.currentRound / 2)
+            console.log(that.currentRound, currentRealRound)
             console.log("(playerId + 1)", (playerId + 1) % 2)
             var nxtPlayer = (playerId + 1) % 2 === 0 ? 0 : 1
             that.currCardId = 99
             that.currPlayer = nxtPlayer
             that.currentRound += 1
-            that.players[playerId].credit = that.roundCredit[that.currentRound]
+            that.players[playerId].credit = that.roundCredit[currentRealRound]
+            that.currentRealRound = currentRealRound
         },
         toQuit(playerId) {
             var that = this
@@ -532,8 +570,29 @@ export default {
          *  任何一方的 score 的 绝对值 > water 即 loss
          */
         currentRound: function () {
-            if (this.currentRound > 4) {
+            if (this.currentRealRound > 9) {
                 console.log("to stop")
+                var playerAfScore = this.scoreA / this.players[0].water
+                var playerBfScore = this.scoreB / this.players[1].water
+                if (playerAfScore > playerBfScore) {
+                    alert(this.players[1].name + "获得胜利")
+                } else if (playerAfScore < playerBfScore) {
+                    alert(this.players[0].name + "获得胜利")
+                } else {
+                    alert("平局")
+                }
+            }
+        },
+        scoreA: function () {
+            console.log(this.scoreA, "scoreA")
+            if (Math.abs(this.scoreA) / this.players[0].water >= 1) {
+                alert(this.players[1].name + "获得胜利！")
+            }
+        },
+        scoreB: function () {
+            console.log(this.scoreB, "scoreB")
+            if (Math.abs(this.scoreB) / this.players[1].water >= 1) {
+                alert(this.players[0].name + "获得胜利！")
             }
         }
     }
@@ -544,7 +603,7 @@ export default {
 .footer {
     /* padding-top: 30px;
     padding-bottom: 20px; */
-    bottom: 15%;
+    bottom: 30px;
     position: absolute;
     left: 20%;
     right: 20%
@@ -554,6 +613,10 @@ export default {
     font-size: 2rem;
 }
 
+.name2 {
+    font-size: .8rem;
+    overflow-wrap: break-word;
+}
 .content {
     color: bisque;
 }
@@ -587,14 +650,22 @@ h2 {
 h3 {
     font-size: 24px;
 }
-
+.cardInfo {
+    border-color: cadetblue;
+    border: 2px solid;
+    margin-left: 20px;
+    margin-right: 20px;
+    box-shadow: 5px 5px 5px #000;
+    padding: 10px;
+    background-color: #E1F5FE;
+}
 .box2 {
     border: 1p solid;
     border-color: black;
     vertical-align: middle;
 
     /* padding: 5px; */
-    width: 75px;
+    width: 80px;
     height: 120px;
     color: cadetblue;
     background-color: lightgrey;
@@ -602,7 +673,8 @@ h3 {
     background-size: cover;
     background-position: center center;
     margin-left: auto;
-    margin-right: auto
+    margin-right: auto;
+
 }
 
 .foo-hover {
@@ -617,10 +689,12 @@ h3 {
 .centerBox {
     border: 1p solid;
     border-color: black;
-    padding: 5px;
-    background-color: lightgoldenrodyellow;
-    opacity: 0.5;
+    padding: 25px;
+    padding-top: 0px;
+    background-color: #FEF9F4;
+    opacity: 0.7;
     color: darkgreen;
+    margin-bottom: 20%;
 }
 
 .element-name {
