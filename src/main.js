@@ -12,6 +12,7 @@ Vue.use(OwUI)
 Vue.use(OwUI.plugins.$owAlert)
 Vue.config.productionTip = false
 Vue.prototype.$http = axios;
+Vue.prototype.$api = process.env.VUE_APP_API_ENDPOINT;
 Vue.use(VueAxios, axios);
 
 new Vue({
