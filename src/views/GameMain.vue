@@ -556,12 +556,6 @@ export default {
         console.log("router", this.$route.path)
         this.initPlayer()
         this.intiGame()
-        // var url = "https://wx.aijuncai.com/api/client_api/client/user_by_openid"
-        // this.$http.get(url, { params: { openid: "ovF374i3zwl2_6lBK5ZWq2BoIVuA" } }).then(
-        //     res => {
-        //         console.log(res.data)
-        //     }
-        // )
     },
     computed: {},
     watch: {
